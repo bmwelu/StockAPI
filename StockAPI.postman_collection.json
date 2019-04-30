@@ -1,0 +1,407 @@
+{
+	"info": {
+		"_postman_id": "2fe94181-fef1-47f2-a647-dbec5d8e0969",
+		"name": "StockAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "808c96a7-a5b1-4171-9c0f-7975470474ae",
+						"exec": [
+							" var data = pm.response.json();\r",
+							"pm.environment.set(\"token\", data.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "brandon",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "welu",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMarketNews",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/market/news",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"market",
+						"news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSectors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/sectors",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"sectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockDetail",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/detail",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"detail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockTimeSeries0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/timeseries/0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"timeseries",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockTimeSeries1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/timeseries/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"timeseries",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockTimeSeries2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/timeseries/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"timeseries",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockTimeSeries3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/timeseries/3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"timeseries",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockPreviousClose",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/previousclose",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"previousclose"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSuggestedStocks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/suggestedstock/?searchString=TSLA",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"suggestedstock",
+						""
+					],
+					"query": [
+						{
+							"key": "searchString",
+							"value": "TSLA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockNews",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stock/TSLA/news",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stock",
+						"TSLA",
+						"news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStockQuotes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/api/stockquote/?tickers=TSLA&tickers=AAPL",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"stockquote",
+						""
+					],
+					"query": [
+						{
+							"key": "tickers",
+							"value": "TSLA"
+						},
+						{
+							"key": "tickers",
+							"value": "AAPL"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d082baf0-d8ca-45d5-8439-336238f2585e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a057233c-3ce8-44e7-afbc-8eb932134218",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

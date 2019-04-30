@@ -1,0 +1,13 @@
+C:\StockAPI\StockAPI\bin\Release\netcoreapp2.2\StockAPI.deps.json
+C:\StockAPI\StockAPI\bin\Release\netcoreapp2.2\StockAPI.runtimeconfig.json
+C:\StockAPI\StockAPI\bin\Release\netcoreapp2.2\StockAPI.runtimeconfig.dev.json
+C:\StockAPI\StockAPI\bin\Release\netcoreapp2.2\StockAPI.dll
+C:\StockAPI\StockAPI\bin\Release\netcoreapp2.2\StockAPI.pdb
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.csproj.CoreCompileInputs.cache
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.RazorAssemblyInfo.cache
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.RazorAssemblyInfo.cs
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.AssemblyInfoInputs.cache
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.AssemblyInfo.cs
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.RazorTargetAssemblyInfo.cache
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.dll
+C:\StockAPI\StockAPI\obj\Release\netcoreapp2.2\StockAPI.pdb
