@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StockAPI.Models.Interfaces;
 
 namespace StockAPI.Models
 {

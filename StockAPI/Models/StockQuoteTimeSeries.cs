@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using StockAPI.Models.Interfaces;
 
 namespace StockAPI.Models
 {

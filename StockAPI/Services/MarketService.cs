@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using StockAPI.Models.Interfaces;
 using StockAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using StockAPI.Services.Interfaces;
 
 namespace StockAPI.Services
 {
@@ -23,9 +24,9 @@ namespace StockAPI.Services
             {
                 return JsonConvert.DeserializeObject<IEnumerable<News>>(await GetExternalStockNewsResponse());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         private async Task<string> GetExternalStockNewsResponse()

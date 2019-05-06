@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json.Linq;
 using StockAPI.Models;
+using StockAPI.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Linq;
+using StockAPI.Services.Interfaces;
 
 namespace StockAPI.Services
 {
@@ -28,9 +30,9 @@ namespace StockAPI.Services
                 stockDetail.StockNews = await GetStockNews(ticker);
                 return stockDetail;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public async Task<IEnumerable<INews>> GetStockNews(string ticker)
@@ -39,9 +41,9 @@ namespace StockAPI.Services
             {
                 return JsonConvert.DeserializeObject<IEnumerable<News>>(await GetExternalStockNewsResponse(ticker));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public async Task<IEnumerable<IStockQuote>> GetStockQuotes(string[] tickers)
@@ -55,9 +57,9 @@ namespace StockAPI.Services
                 }
                 return _mapper.Map<IEnumerable<StockQuote>>(quotesJson);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public async Task<IEnumerable<ITimeSeriesData>> GetTimeSeriesData(string ticker, int interval)
@@ -82,12 +84,12 @@ namespace StockAPI.Services
                     return new StockQuoteTimeSeries().ParseTimeSeriesData(timeSeriesJson);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
-        public async Task<StockPreviousClose> GetStockPreviousClose(string ticker)
+        public async Task<IStockPreviousClose> GetStockPreviousClose(string ticker)
         {
             try
             {
@@ -95,9 +97,9 @@ namespace StockAPI.Services
                 var quoteList = new List<JToken>(JObject.Parse(await GetExternalStockPreviousCloseResponse(ticker)).Children());
                 return _mapper.Map<StockPreviousClose>((JProperty)quoteList[0]);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public async Task<IEnumerable<ISuggestedStock>> GetSuggestedStocks(string searchString)
@@ -112,9 +114,9 @@ namespace StockAPI.Services
                 return _mapper.Map<List<SuggestedStock>>(suggestedStockJson).Take(
                     int.Parse(_iConfig.GetValue<string>("SuggestedStocks:MaxResults")));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         private async Task<string> GetExternalStockDetailResponse(string ticker)

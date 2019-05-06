@@ -1,4 +1,5 @@
-﻿namespace StockAPI.Models
+﻿using StockAPI.Models.Interfaces;
+namespace StockAPI.Models
 {
     public class TimeSeriesData : ITimeSeriesData
     {

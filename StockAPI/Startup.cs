@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using Microsoft.IdentityModel.Tokens;
 using StockAPI.Services;
+using StockAPI.Services.Interfaces;
 using System.Text;
 
 namespace StockAPI
@@ -51,15 +54,25 @@ namespace StockAPI
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,          
-                    ValidIssuer = $"{Configuration.GetValue<string>("Hosting:APIURL")}",
-                    ValidAudience = $"{Configuration.GetValue<string>("Hosting:APIURL")}",
+                    ValidIssuer = Configuration.GetValue<string>("Hosting:APIURL"),
+                    ValidAudience = Configuration.GetValue<string>("Hosting:APIURL"),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
                 };
             });
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowCredentials().AllowAnyMethod().AllowCredentials().AllowAnyHeader());
+                options.AddPolicy("CorsPolicy", builder => builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins(Configuration.GetValue<string>("Origins:URL"))
+                .AllowCredentials());
             });
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+            });
+            services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);    
         }
 
@@ -75,6 +88,7 @@ namespace StockAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

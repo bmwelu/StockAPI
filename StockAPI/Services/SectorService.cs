@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json.Linq;
+using StockAPI.Models.Interfaces;
 using StockAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using StockAPI.Services.Interfaces;
 
 namespace StockAPI.Services
 {
@@ -23,16 +25,19 @@ namespace StockAPI.Services
         {
             try
             {
-                var sectorsJson = new List<JProperty>();
-                foreach(var jToken in JObject.Parse(await GetExternalResponse())[_realTimeSectionString].Children())
+                var realTimeSectorData = new List<JProperty>();
+                var sectorsJSONResponse = JObject.Parse(await GetExternalResponse())[_realTimeSectionString];
+                if (sectorsJSONResponse ==  null)
+                    return null;
+                foreach (var jToken in sectorsJSONResponse.Children())
                 {
-                    sectorsJson.Add((JProperty)jToken);
+                    realTimeSectorData.Add((JProperty)jToken);
                 }
-                return _mapper.Map<IEnumerable<Sector>>(sectorsJson);
+                return _mapper.Map<IEnumerable<Sector>>(realTimeSectorData);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 

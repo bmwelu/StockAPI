@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 using StockAPI.Models;
-using StockAPI.Services;
+using StockAPI.Services.Interfaces;
 
 namespace StockAPI.Controllers
 {
@@ -20,14 +14,16 @@ namespace StockAPI.Controllers
     public class AuthController : ControllerBase
     {
         private IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ILogger _logger;
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost, Route("login")]
         [MapToApiVersion("1.0")]
-        [EnableCors("AllowOrigin")]
+        [EnableCors("CorsPolicy")]
         public IActionResult Login([FromForm]Login credentials)
         {
             try
@@ -38,12 +34,16 @@ namespace StockAPI.Controllers
                 }
                 var authToken = _authService.GetAuthToken(credentials);
                 if (!string.IsNullOrEmpty(authToken))
+                {
+                    _logger.LogInformation(LoggingEvents.Login, $"{credentials.UserName} successfully logged in.");
                     return Ok(new { Token = authToken });
+                }                   
                 else
                     return Unauthorized();
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                _logger.LogWarning(LoggingEvents.LoginNotFound, ex, "Exception in AuthController: Login\n");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong on the server.");
             }
         }
