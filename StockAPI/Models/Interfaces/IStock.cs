@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NewsAPI.Models;
+using System.Collections.Generic;
 
 namespace StockAPI.Models.Interfaces
 {
@@ -8,7 +9,7 @@ namespace StockAPI.Models.Interfaces
         float LatestPrice { get; set; }
         float PreviousClose { get; set; }
         string PrimaryExchange { get; set; }
-        IEnumerable<INews> StockNews { get; set; }
+        IEnumerable<Article> StockNews { get; set; }
         string Symbol { get; set; }
         float Week52High { get; set; }
         float Week52Low { get; set; }

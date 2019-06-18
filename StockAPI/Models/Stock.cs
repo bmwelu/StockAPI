@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NewsAPI.Models;
 using StockAPI.Models.Interfaces;
 
 namespace StockAPI.Models
@@ -12,7 +13,7 @@ namespace StockAPI.Models
         public float Week52Low { get; set; }
         public float LatestPrice { get; set; }
         public float PreviousClose { get; set; }
-        public IEnumerable<INews> StockNews { get; set; } = new List<News>();
+        public IEnumerable<Article> StockNews { get; set; } = new List<Article>();
         public string Sector { get; set; }
     }
 }

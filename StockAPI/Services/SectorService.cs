@@ -24,11 +24,11 @@ namespace StockAPI.Services
         public async Task<IEnumerable<ISector>> GetSectors()
         {
             try
-            {
-                var realTimeSectorData = new List<JProperty>();
+            {           
                 var sectorsJSONResponse = JObject.Parse(await GetExternalResponse())[_realTimeSectionString];
                 if (sectorsJSONResponse ==  null)
-                    return null;
+                    throw new NullReferenceException("Real time sector data is null.");
+                var realTimeSectorData = new List<JProperty>();
                 foreach (var jToken in sectorsJSONResponse.Children())
                 {
                     realTimeSectorData.Add((JProperty)jToken);

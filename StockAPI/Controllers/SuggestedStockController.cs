@@ -33,6 +33,8 @@ namespace StockAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(searchString))
+                    return BadRequest("Search string can't be empty.");
                 return Ok(await _stockService.GetSuggestedStocks(searchString));
             }
             catch (Exception ex)

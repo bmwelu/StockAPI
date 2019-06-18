@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Linq;
 using StockAPI.Services.Interfaces;
+using NewsAPI.Models;
+using NewsAPI;
+using NewsAPI.Constants;
 
 namespace StockAPI.Services
 {
@@ -26,6 +29,8 @@ namespace StockAPI.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(ticker))
+                    throw new ArgumentException("Ticker can't be null or empty.");
                 var stockDetail = JsonConvert.DeserializeObject<Stock>(await GetExternalStockDetailResponse(ticker));
                 stockDetail.StockNews = await GetStockNews(ticker);
                 return stockDetail;
@@ -35,11 +40,13 @@ namespace StockAPI.Services
                 throw;
             }
         }
-        public async Task<IEnumerable<INews>> GetStockNews(string ticker)
+        public async Task<IEnumerable<Article>> GetStockNews(string ticker)
         {
             try
             {
-                return JsonConvert.DeserializeObject<IEnumerable<News>>(await GetExternalStockNewsResponse(ticker));
+                if (string.IsNullOrEmpty(ticker))
+                    throw new ArgumentException("Ticker can't be null or empty.");
+                return await GetExternalStockNews(ticker);
             }
             catch (Exception)
             {
@@ -50,6 +57,8 @@ namespace StockAPI.Services
         {
             try
             {
+                if (tickers.Length == 0)
+                    throw new ArgumentException("Ticker collection can't be empty.");
                 var quotesJson = new List<JProperty>();
                 foreach (var jToken in JObject.Parse(await GetExternalStockQuotesResponse(tickers)).Children())
                 {
@@ -64,7 +73,9 @@ namespace StockAPI.Services
         }
         public async Task<IEnumerable<ITimeSeriesData>> GetTimeSeriesData(string ticker, int interval)
         {
-            if(interval < int.Parse(_iConfig.GetValue<string>("TimeSeriesInvervals:Intraday")) || 
+            if (string.IsNullOrEmpty(ticker))
+                throw new ArgumentException("Ticker can't be null or empty.");
+            if (interval < int.Parse(_iConfig.GetValue<string>("TimeSeriesInvervals:Intraday")) || 
                 interval > int.Parse(_iConfig.GetValue<string>("TimeSeriesInvervals:Monthly")))
             {
                 throw new IndexOutOfRangeException($"Interval passed in is out of range.  Valid range is " +
@@ -93,6 +104,8 @@ namespace StockAPI.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(ticker))
+                    throw new ArgumentException("Ticker can't be null or empty.");
                 //expect only a list of 1
                 var quoteList = new List<JToken>(JObject.Parse(await GetExternalStockPreviousCloseResponse(ticker)).Children());
                 return _mapper.Map<StockPreviousClose>((JProperty)quoteList[0]);
@@ -106,6 +119,8 @@ namespace StockAPI.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(searchString))
+                    throw new ArgumentException("Search string can't be null or empty.");
                 var suggestedStockJson = new List<JObject>();
                 foreach (var jToken in JObject.Parse(await GetExternalStockLookupResponse(searchString))["ResultSet"]["Result"].Children())
                 {
@@ -123,24 +138,33 @@ namespace StockAPI.Services
         {
             var response = await new HttpClient().GetAsync(
                 $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}/" +
-                $"{ticker}/quote");
+                $"{ticker}/stats?token={_iConfig.GetValue<string>("ExternalApiURLs:StockURLAPIKey")}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
-        private async Task<string> GetExternalStockNewsResponse(string ticker)
+        private async Task<IList<Article>> GetExternalStockNews(string ticker)
         {
-            var response = await new HttpClient().GetAsync(
-                $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}/" +
-                $"{ticker}/news/last/" +
-                $"{_iConfig.GetValue<string>("Stock:MaxNewsArcticles")}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            // init with your API key
+            var newsApiClient = new NewsApiClient(_iConfig.GetValue<string>("ExternalApiURLs:NewsAPIKey"));
+            var articlesResponse = await newsApiClient.GetTopHeadlinesAsync(new TopHeadlinesRequest
+            {
+                Country = Countries.US,
+                PageSize = 10,
+                Page = 1,
+                Q = ticker,
+                Language = Languages.EN,
+            });
+            if (articlesResponse.Status == Statuses.Ok)
+            {
+                return articlesResponse.Articles;
+            }
+            return null;
         }
         private async Task<string> GetExternalStockQuotesResponse(string[] tickers)
         {
             var response = await new HttpClient().GetAsync(
                 $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}market/batch?symbols=" +
-                $"{string.Join(',', tickers)}&types=quote&range=1m");
+                $"{string.Join(',', tickers)}&types=quote&range=1m&token={_iConfig.GetValue<string>("ExternalApiURLs:StockURLAPIKey")}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -148,7 +172,7 @@ namespace StockAPI.Services
         {
             var response = await new HttpClient().GetAsync(
                 $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}market/batch?symbols=" +
-                $"{ticker}&types=quote&range=1m");
+                $"{ticker}&types=quote&range=1m&token={_iConfig.GetValue<string>("ExternalApiURLs:StockURLAPIKey")}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -162,9 +186,19 @@ namespace StockAPI.Services
         }
         private async Task<string> GetExternalStockTimeSeriesResponse(string ticker, string timeSpan)
         {
-            var response = await new HttpClient().GetAsync(
-                $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}" +
-                $"{ticker}/chart/{timeSpan}/?changeFromClose=true");
+            HttpResponseMessage response;
+            if (timeSpan == "dynamic")
+            {
+                response = await new HttpClient().GetAsync(
+                    $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}" +
+                    $"{ticker}/chart/date/{DateTime.Now.ToString("yyyyMMdd")}?token={_iConfig.GetValue<string>("ExternalApiURLs:StockURLAPIKey")}");
+            }
+            else
+            {
+                response = await new HttpClient().GetAsync(
+                    $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}" +
+                    $"{ticker}/chart/{timeSpan}?changeFromClose=true&token={_iConfig.GetValue<string>("ExternalApiURLs:StockURLAPIKey")}");
+            }
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }

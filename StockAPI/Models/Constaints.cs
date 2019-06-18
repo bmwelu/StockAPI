@@ -6,7 +6,7 @@ namespace StockAPI.Models
     {
         public static readonly Dictionary<int, string> TimeSeriesAPIMapping = new Dictionary<int, string>()
         {
-            {0, "1d" },
+            {0, "dynamic" },
             {1, "1m" },
             {2, "1y" },
             {3, "5y" },

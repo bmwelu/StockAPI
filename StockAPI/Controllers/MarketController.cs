@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NewsAPI.Models;
 using StockAPI.Models;
 using StockAPI.Models.Interfaces;
 using StockAPI.Services.Interfaces;
@@ -28,7 +29,7 @@ namespace StockAPI.Controllers
         [HttpGet("news"), Authorize]
         [MapToApiVersion("1.0")]
         [EnableCors("CorsPolicy")]
-        public async Task<ActionResult<IEnumerable<INews>>> GetMarketNews()
+        public async Task<ActionResult<IEnumerable<Article>>> GetMarketNews()
         {
             try
             {

@@ -22,6 +22,8 @@ namespace StockAPI.Services
         {
             try
             {
+                if (credentials == null || string.IsNullOrEmpty(credentials.UserName) || string.IsNullOrEmpty(credentials.Password))
+                    throw new ArgumentException("Null or Invalid credientials");
                 if (credentials.UserName == "brandon" && credentials.Password == "welu")
                 {
                     var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
@@ -37,7 +39,8 @@ namespace StockAPI.Services
 
                     return new JwtSecurityTokenHandler().WriteToken(tokeOptions);
                 }
-                return string.Empty;
+                else
+                    return string.Empty;
             }
             catch (Exception)
             {

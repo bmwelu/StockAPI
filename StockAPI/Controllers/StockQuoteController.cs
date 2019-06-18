@@ -32,6 +32,8 @@ namespace StockAPI.Controllers
         {
             try
             {
+                if (tickers.Length == 0)
+                    return BadRequest("Ticker collection can't be empty.");
                 return Ok(await _stockService.GetStockQuotes(tickers));
             }
             catch (Exception ex)

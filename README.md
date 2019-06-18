@@ -23,12 +23,10 @@ My goal is to learn (or refresh up on):
 
 ## TODO
 
-CORS is done sloppy; must harden
+    Create database, use entity, save stock watch symbols
 
-Create database, use entity, save stock watch symbols
+    Role based authentication
 
-Role based authentication
+    New user registration
 
-New user registration
-
-Refresh tokens. (If token expires while still using, app will force to resignin.)
+    Refresh tokens. (If token expires while still using, app will force to resignin.)

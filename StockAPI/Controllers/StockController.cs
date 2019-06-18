@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NewsAPI.Models;
 using StockAPI.Models;
 using StockAPI.Models.Interfaces;
 using StockAPI.Services.Interfaces;
@@ -31,6 +32,8 @@ namespace StockAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(ticker))
+                    return BadRequest("Ticker can't be empty.");
                 return Ok(await _stockService.GetStockDetail(ticker));
             }
             catch(Exception ex)
@@ -42,10 +45,12 @@ namespace StockAPI.Controllers
         [HttpGet("{ticker}/news"), Authorize]
         [MapToApiVersion("1.0")]
         [EnableCors("CorsPolicy")]
-        public async Task<ActionResult<INews>> GetStockNews(string ticker)
+        public async Task<ActionResult<Article>> GetStockNews(string ticker)
         {
             try
             {
+                if (string.IsNullOrEmpty(ticker))
+                    return BadRequest("Ticker can't be empty.");
                 return Ok(await _stockService.GetStockNews(ticker));
             }
             catch (Exception ex)
@@ -61,6 +66,8 @@ namespace StockAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(ticker))
+                    return BadRequest("Ticker can't be empty.");
                 return Ok(await _stockService.GetStockPreviousClose(ticker));
             }
             catch (Exception ex)
@@ -76,6 +83,10 @@ namespace StockAPI.Controllers
         {
             try
             {
+                if (interval == 0)
+                    return Ok(new List<TimeSeriesData>());
+                if (string.IsNullOrEmpty(ticker))
+                    return BadRequest("Ticker can't be empty.");
                 return Ok(await _stockService.GetTimeSeriesData(ticker, interval));
             }
             catch (Exception ex)

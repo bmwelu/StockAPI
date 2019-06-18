@@ -64,7 +64,7 @@ namespace StockAPI
                 options.AddPolicy("CorsPolicy", builder => builder
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .WithOrigins(Configuration.GetValue<string>("Origins:URL"))
+                .WithOrigins(Configuration.GetSection("Origins:URLS").Get<string[]>())
                 .AllowCredentials());
             });
             services.AddLogging(loggingBuilder =>

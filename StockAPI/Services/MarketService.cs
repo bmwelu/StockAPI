@@ -1,12 +1,11 @@
-﻿using StockAPI.Models.Interfaces;
-using StockAPI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using StockAPI.Services.Interfaces;
+using NewsAPI;
+using NewsAPI.Models;
+using NewsAPI.Constants;
 
 namespace StockAPI.Services
 {
@@ -18,25 +17,32 @@ namespace StockAPI.Services
         {
             _iConfig = iConfig;
         }
-        public async Task<IEnumerable<INews>> GetMarketNews()
+        public async Task<IEnumerable<Article>> GetMarketNews()
         {
             try
             {
-                return JsonConvert.DeserializeObject<IEnumerable<News>>(await GetExternalStockNewsResponse());
+                return await GetTopNewsAsync();
             }
             catch (Exception)
             {
                 throw;
             }
         }
-        private async Task<string> GetExternalStockNewsResponse()
+        private async Task<IList<Article>> GetTopNewsAsync()
         {
-            var response = await new HttpClient().GetAsync(
-                $"{_iConfig.GetValue<string>("ExternalApiURLs:StockURL")}/" +
-                $"market/news/last/" +
-                $"{_iConfig.GetValue<string>("Market:MaxNewsResults")}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            // init with your API key
+            var newsApiClient = new NewsApiClient(_iConfig.GetValue<string>("ExternalApiURLs:NewsAPIKey"));
+            var articlesResponse = await newsApiClient.GetTopHeadlinesAsync(new TopHeadlinesRequest
+            {
+                Country = Countries.US,
+                PageSize = 10,
+                Page = 1
+            });
+            if (articlesResponse.Status == Statuses.Ok)
+            {
+                return articlesResponse.Articles;
+            }
+            return null;
         }
     }
 }
